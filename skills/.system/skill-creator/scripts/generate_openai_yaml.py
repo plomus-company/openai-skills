@@ -50,8 +50,10 @@ ALLOWED_INTERFACE_KEYS = {
 
 
 def yaml_quote(value):
-    escaped = value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
-    return f'"{escaped}"'
+    # Let the YAML emitter escape controls without folding or corrupting strings.
+    return yaml.safe_dump(
+        value, default_style='"', allow_unicode=True, width=float("inf")
+    ).strip()
 
 
 def format_display_name(skill_name):
